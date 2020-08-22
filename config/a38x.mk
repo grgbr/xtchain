@@ -1,0 +1,9 @@
+CONFIG_DESC                := Toolchain for Marvell Armada 38x SoC based platform
+CONFIG_CROSSTOOL_TARBALL   := crosstool-ng-1.24.0.tar.xz
+CONFIG_CROSSTOOL_TUPLE     := armv7_a38x-xtchain-linux-gnueabihf
+CONFIG_CROSSTOOL_DEFCONFIG := $(CONFIG_CROSSTOOL_TUPLE)_crosstool.defconfig
+CONFIG_AUTOCONF_TARBALL    := autoconf-2.69.tar.xz
+CONFIG_AUTOMAKE_TARBALL    := automake-1.16.1.tar.xz
+CONFIG_LDCONFIG_TARBALL    := ldconfig-native-2.12.1.tar.bz2
+CONFIG_LIBTOOL_TARBALL     := libtool-2.4.6.tar.gz
+CONFIG_PKGCONFIG_TARBALL   := pkg-config-0.29.2.tar.gz
