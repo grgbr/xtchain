@@ -94,11 +94,20 @@ your development host :
 * patch
 * help2man
 * gcc
+* g++
 * make
 * autoconf
 * automake
-* libtool
+* libtool / libtool-bin
+* libncurses5-dev
+* git
+* ssh
 * pkg-config
+* flex
+* bison
+* texinfo
+* texlive
+* gawk
 * ???
 
 Getting help
@@ -177,11 +186,12 @@ TODO
 An unordered list of futur improvements :
 
 * alternative DESTDIR install location
-* debian packagin (depends on DESTDIR support)
+* debian packaging (depends on DESTDIR support)
 * additional components ??
 * enable glibc libmvec support
 * flex / bison
-* ...
+* gawk perl python2/3 cpio fakeroot bc
+* make / cmake / gcc / g++ / libc6-dev ?
 
 .. [1] gcc / glibc settings retrieved according to the command :
        :sh:`gcc -Q --help=target`
