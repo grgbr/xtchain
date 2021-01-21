@@ -37,7 +37,7 @@ $(stampdir)/installed: $(stampdir)/built
 .PHONY: build
 build: $(stampdir)/built
 
-$(stampdir)/built: $(stampdir)/configured
+$(stampdir)/built: $(stampdir)/configured | $(tarballdir)
 	@echo ===== Building $(MODULE)
 	+cd $(builddir) && \
 		unset LD_LIBRARY_PATH && \
@@ -71,7 +71,7 @@ $(stampdir)/extracted: | $(stampdir)
 	$(call extract_cmd,$(builddir),$(tarball))
 	@touch $(@)
 
-$(stampdir):
+$(stampdir) $(tarballdir):
 	@mkdir -p $(@)
 
 .PHONY: clean
