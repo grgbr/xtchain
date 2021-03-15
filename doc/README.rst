@@ -101,6 +101,7 @@ your development host :
 * texlive
 * gawk
 * rsync
+* python3-sphinx / python3-sphinx-rtd-theme
 
 Main Makefile comes with a *prepare* target allowing to install all required
 packages (see `Build`_ section).

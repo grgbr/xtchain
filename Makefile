@@ -54,7 +54,8 @@ packages := coreutils \
             texlive \
             gawk \
             rsync \
-            python3-sphinx
+            python3-sphinx \
+            python3-sphinx-rtd-theme
 
 .SILENT:
 .NOTPARALLEL:
