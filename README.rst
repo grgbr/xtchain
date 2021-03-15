@@ -108,7 +108,7 @@ your development host :
 * texinfo
 * texlive
 * gawk
-* ???
+* rsync
 
 Getting help
 ************
