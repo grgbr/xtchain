@@ -39,7 +39,7 @@ MAKEFLAGS += --jobs $(job_nr)
 # Module targets
 ################################################################################
 
-modules         := autoconf automake libtool pkgconfig ldconfig crosstool final
+modules         := autoconf automake libtool pkgconfig ldconfig crosstool final doc
 extract_targets := $(foreach f,$(flavours),$(addprefix extract-$(f)-,$(modules)))
 config_targets  := $(foreach f,$(flavours),$(addprefix config-$(f)-,$(modules)))
 build_targets   := $(foreach f,$(flavours),$(addprefix build-$(f)-,$(modules)))

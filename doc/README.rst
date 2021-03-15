@@ -1,13 +1,5 @@
-.. role:: sh(code)
-   :language: sh
-
-XtChain
-#######
-
-Build and install crosstool-ng based toolchains.
-
 Provided components
-===================
+###################
 
 Installed toolchains will include the following components :
 
@@ -22,7 +14,7 @@ Installed toolchains will include the following components :
 Toolchains are meant to run onto **x86_64 GNU/Linux** development hosts only.
   
 Supported platforms
-===================
+###################
 
 As of today, the following toolchain support is provided :
 
@@ -81,7 +73,7 @@ Toolchain default settings are described into the table below [1]_.
 
 
 Build / install workflow
-========================
+########################
 
 Prerequisites
 *************
@@ -110,21 +102,30 @@ your development host :
 * gawk
 * rsync
 
+Main Makefile comes with a *prepare* target allowing to install all required
+packages (see `Build`_ section).
+  
 Getting help
 ************
 
 From XtChain source tree root, enter :
 
-.. code:: sh
+.. code-block:: console
 
    $ make help
 
 Build
 *****
 
+First of all, install all required dependencies :
+
+.. code-block:: console
+
+   $ make prepare
+
 Building toolchain *a38x* is performed out of source tree like so :
 
-.. code:: sh
+.. code-block:: console
 
    $ make build-a38x BUILDDIR=/tmp/xtchain_build PREFIX=/opt/xtchain
 
@@ -139,7 +140,7 @@ Install
 Installing toolchain *a38x* is performed according to the following
 command :
 
-.. code:: sh
+.. code-block:: console
 
    $ make install-a38x BUILDDIR=/tmp/xtchain_build PREFIX=/opt/xtchain
    
@@ -156,7 +157,7 @@ Install directory hierarchy
 
 The directory hierarchy installed by the example commands above is show below.
 
-.. parsed-literal::
+.. code-block:: console
 
    $ ls -l /opt/xtchain/a38x/
    total 28
@@ -176,12 +177,13 @@ In the excerpt above :
   *share* remaining directories.
 
 Adding a new toolchain
-======================
+######################
 
-Complete me !
+.. todo::
+   Complete me !
 
 TODO
-====
+####
 
 An unordered list of futur improvements :
 
@@ -194,4 +196,4 @@ An unordered list of futur improvements :
 * make / cmake / gcc / g++ / libc6-dev ?
 
 .. [1] gcc / glibc settings retrieved according to the command :
-       :sh:`gcc -Q --help=target`
+       :code:`gcc -Q --help=target`
