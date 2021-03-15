@@ -59,6 +59,16 @@ $(stampdir)/configured: $(stampdir)/prepared
 		    ./ct-ng defconfig
 	@touch $(@)
 
+.PHONY: menuconfig
+menuconfig: $(stampdir)/configured
+	+cd $(builddir) && \
+		unset LD_LIBRARY_PATH && \
+		env DEFCONFIG=$(defconfig) \
+		    TARBALLDIR="$(tarballdir)" \
+		    INSTALLDIR="$(installdir)" \
+		    ./ct-ng menuconfig
+	@touch $(@)
+
 $(stampdir)/prepared: $(stampdir)/extracted
 	cd $(builddir) && ./configure --enable-local && make
 	@touch $(@)

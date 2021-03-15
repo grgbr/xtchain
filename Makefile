@@ -32,6 +32,30 @@ job_nr := $(shell echo $$(($(cpu_nr) * 3 / 2)))
 
 MAKEFLAGS += --jobs $(job_nr)
 
+# The list of packages required for the build to complete.
+packages := coreutils \
+            tar \
+            patch \
+            help2man \
+            gcc \
+            g++ \
+            make \
+            autoconf \
+            automake \
+            libtool \
+            libtool-bin \
+            libncurses5-dev \
+            git \
+            ssh \
+            pkg-config \
+            flex \
+            bison \
+            texinfo \
+            texlive \
+            gawk \
+            rsync \
+            python3-sphinx
+
 .SILENT:
 .NOTPARALLEL:
 
@@ -39,17 +63,19 @@ MAKEFLAGS += --jobs $(job_nr)
 # Module targets
 ################################################################################
 
-modules         := autoconf automake libtool pkgconfig ldconfig crosstool final doc
-extract_targets := $(foreach f,$(flavours),$(addprefix extract-$(f)-,$(modules)))
-config_targets  := $(foreach f,$(flavours),$(addprefix config-$(f)-,$(modules)))
-build_targets   := $(foreach f,$(flavours),$(addprefix build-$(f)-,$(modules)))
-install_targets := $(foreach f,$(flavours),$(addprefix install-$(f)-,$(modules)))
-clean_targets   := $(foreach f,$(flavours),$(addprefix clean-$(f)-,$(modules)))
-all_targets     := $(extract_targets) \
-                   $(config_targets) \
-                   $(build_targets) \
-                   $(install_targets) \
-                   $(clean_targets)
+modules            := autoconf automake libtool pkgconfig ldconfig crosstool final doc
+extract_targets    := $(foreach f,$(flavours),$(addprefix extract-$(f)-,$(modules)))
+config_targets     := $(foreach f,$(flavours),$(addprefix config-$(f)-,$(modules)))
+menuconfig_targets := $(foreach f,$(flavours),$(addprefix menuconfig-$(f)-,$(modules)))
+build_targets      := $(foreach f,$(flavours),$(addprefix build-$(f)-,$(modules)))
+install_targets    := $(foreach f,$(flavours),$(addprefix install-$(f)-,$(modules)))
+clean_targets      := $(foreach f,$(flavours),$(addprefix clean-$(f)-,$(modules)))
+all_targets        := $(extract_targets) \
+                      $(config_targets) \
+                      $(menuconfig_targets) \
+                      $(build_targets) \
+                      $(install_targets) \
+                      $(clean_targets)
 
 target_action  = $(word 1,$(subst -, ,$(1)))
 target_flavour = $(word 2,$(subst -, ,$(1)))
@@ -79,6 +105,13 @@ $(all_targets):
 ################################################################################
 # Main targets
 ################################################################################
+
+# Install required packages:
+# - preventing them to be upgraded if they are already installed,
+# - assuming "yes" answer to all prompts.
+.PHONY: prepare
+prepare:
+	apt-get install --no-upgrade --assume-yes $(packages)
 
 .PHONY: mrproper
 mrproper:
@@ -111,6 +144,8 @@ define help_message
 Build and install toolchain(s) for I.C. ComEth platforms.
 
 ::Main targets::
+  prepare                      -- install packages required to build the
+                                  toolchain
   mrproper                     -- remove all toolchains generated objects
   list                         -- display available buildable toolchains
   help                         -- this help message
@@ -120,6 +155,8 @@ Build and install toolchain(s) for I.C. ComEth platforms.
   extract-<TOOLCHAIN>          -- extract all TOOLCHAIN modules archive into
                                   $$(BUILDDIR)/$$(TOOLCHAIN) build area
   config-<TOOLCHAIN>           -- configure build of all TOOLCHAIN modules
+  menucconfig-<TOOLCHAIN>      -- configure build of all TOOLCHAIN modules
+                                  interactively
   build-<TOOLCHAIN>            -- build all TOOLCHAIN modules
   install-<TOOLCHAIN>          -- install all TOOLCHAIN modules under
                                   $$(PREFIX)/$$(TOOLCHAIN) final directory
