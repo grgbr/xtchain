@@ -67,7 +67,7 @@ menuconfig: $(stampdir)/configured
 		    TARBALLDIR="$(tarballdir)" \
 		    INSTALLDIR="$(installdir)" \
 		    ./ct-ng menuconfig
-	@touch $(@)
+	@touch $(<)
 
 $(stampdir)/prepared: $(stampdir)/extracted
 	cd $(builddir) && ./configure --enable-local && make
