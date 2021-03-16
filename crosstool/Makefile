@@ -20,8 +20,7 @@ $(error No crosstool tuple defined !)
 endif # ($(CONFIG_CROSSTOOL_TUPLE),)
 
 installdir := $(abspath $(BUILDDIR)/$(FLAVOUR)/$(CONFIG_CROSSTOOL_TUPLE))
-
-tarballdir := $(abspath $(BUILDDIR)/$(FLAVOUR)/tarballs)
+tarballdir := $(CURDIR)
 
 .PHONY: install
 install: $(stampdir)/installed
@@ -68,6 +67,15 @@ menuconfig: $(stampdir)/configured
 		    INSTALLDIR="$(installdir)" \
 		    ./ct-ng menuconfig
 	@touch $(<)
+
+.PHONY: download
+download: $(stampdir)/configured
+	+cd $(builddir) && \
+		unset LD_LIBRARY_PATH && \
+		env DEFCONFIG=$(defconfig) \
+		    TARBALLDIR="$(tarballdir)" \
+		    INSTALLDIR="$(installdir)" \
+		    ./ct-ng source
 
 $(stampdir)/prepared: $(stampdir)/extracted
 	cd $(builddir) && ./configure --enable-local && make

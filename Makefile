@@ -66,13 +66,11 @@ packages := coreutils \
 modules            := autoconf automake libtool pkgconfig ldconfig crosstool final doc
 extract_targets    := $(foreach f,$(flavours),$(addprefix extract-$(f)-,$(modules)))
 config_targets     := $(foreach f,$(flavours),$(addprefix config-$(f)-,$(modules)))
-menuconfig_targets := $(foreach f,$(flavours),$(addprefix menuconfig-$(f)-,$(modules)))
 build_targets      := $(foreach f,$(flavours),$(addprefix build-$(f)-,$(modules)))
 install_targets    := $(foreach f,$(flavours),$(addprefix install-$(f)-,$(modules)))
 clean_targets      := $(foreach f,$(flavours),$(addprefix clean-$(f)-,$(modules)))
 all_targets        := $(extract_targets) \
                       $(config_targets) \
-                      $(menuconfig_targets) \
                       $(build_targets) \
                       $(install_targets) \
                       $(clean_targets)
@@ -95,6 +93,30 @@ $(eval $(foreach f,$(flavours),$(call gen_top_targets,clean,$(f))$(newline)))
 .PHONY: $(all_targets)
 $(all_targets):
 	$(MAKE) -C $(TOPDIR)/$(call target_module,$(@)) \
+	        $(call target_action,$(@)) \
+	        TOPDIR:=$(TOPDIR) \
+	        CONFIGDIR:=$(CONFIGDIR) \
+	        FLAVOUR:=$(call target_flavour,$(@)) \
+	        BUILDDIR:=$(BUILDDIR) \
+	        PREFIX:=$(PREFIX)
+
+################################################################################
+# Crosstool module specific targets
+################################################################################
+
+menuconfig_crosstool_targets := $(foreach f, \
+                                          $(flavours), \
+                                          $(addprefix menuconfig-$(f)-, \
+                                                      crosstool))
+download_crosstool_targets   := $(foreach f, \
+                                          $(flavours), \
+                                          $(addprefix download-$(f)-,crosstool))
+crosstool_targets            := $(menuconfig_crosstool_targets) \
+                                $(download_crosstool_targets)
+
+.PHONY: $(crosstool_targets)
+$(crosstool_targets):
+	$(MAKE) -C $(TOPDIR)/crosstool \
 	        $(call target_action,$(@)) \
 	        TOPDIR:=$(TOPDIR) \
 	        CONFIGDIR:=$(CONFIGDIR) \
@@ -144,49 +166,56 @@ define help_message
 Build and install toolchain(s) for I.C. ComEth platforms.
 
 ::Main targets::
-  prepare                      -- install packages required to build the
-                                  toolchain
-  mrproper                     -- remove all toolchains generated objects
-  list                         -- display available buildable toolchains
-  help                         -- this help message
+  prepare                          -- install packages required to build the
+                                      toolchain
+  mrproper                         -- remove all toolchains generated objects
+  list                             -- display available buildable toolchains
+  help                             -- this help message
 
 
 ::Toolchain targets:: Applicable to specified TOOLCHAIN
-  extract-<TOOLCHAIN>          -- extract all TOOLCHAIN modules archive into
-                                  $$(BUILDDIR)/$$(TOOLCHAIN) build area
-  config-<TOOLCHAIN>           -- configure build of all TOOLCHAIN modules
-  menucconfig-<TOOLCHAIN>      -- configure build of all TOOLCHAIN modules
-                                  interactively
-  build-<TOOLCHAIN>            -- build all TOOLCHAIN modules
-  install-<TOOLCHAIN>          -- install all TOOLCHAIN modules under
-                                  $$(PREFIX)/$$(TOOLCHAIN) final directory
-  clean-<TOOLCHAIN>            -- remove all TOOLCHAIN modules generated objects
-                                  from $$(BUILDDIR)/$$(TOOLCHAIN) build area
+  extract-<TOOLCHAIN>              -- extract all TOOLCHAIN modules archive into
+                                      $$(BUILDDIR)/$$(TOOLCHAIN) build area
+  config-<TOOLCHAIN>               -- configure build of all TOOLCHAIN modules
+  build-<TOOLCHAIN>                -- build all TOOLCHAIN modules
+  install-<TOOLCHAIN>              -- install all TOOLCHAIN modules under
+                                      $$(PREFIX)/$$(TOOLCHAIN) final directory
+  clean-<TOOLCHAIN>                -- remove all TOOLCHAIN modules generated
+                                      objects from $$(BUILDDIR)/$$(TOOLCHAIN)
+                                      build area
 
 
 ::Module targets:: Applicable to specified TOOLCHAIN / MODULE combination
-  extract-<TOOLCHAIN>-<MODULE> -- extract TOOLCHAIN MODULE archive into
-                                  $$(BUILDDIR)/$$(TOOLCHAIN) build area
-  config-<TOOLCHAIN>-<MODULE>  -- configure build of TOOLCHAIN MODULE
-  build-<TOOLCHAIN>-<MODULE>   -- build TOOLCHAIN MODULE
-  install-<TOOLCHAIN>-<MODULE> -- install TOOLCHAIN MODULE under
-                                  $$(PREFIX)/$$(TOOLCHAIN) final directory
-  clean-<TOOLCHAIN>-<MODULE>   -- remove TOOLCHAIN MODULE generated objects from
-                                  $$(BUILDDIR)/$$(TOOLCHAIN) build area
+  extract-<TOOLCHAIN>-<MODULE>     -- extract TOOLCHAIN MODULE archive into
+                                      $$(BUILDDIR)/$$(TOOLCHAIN) build area
+  config-<TOOLCHAIN>-<MODULE>      -- configure build of TOOLCHAIN MODULE
+  build-<TOOLCHAIN>-<MODULE>       -- build TOOLCHAIN MODULE
+  install-<TOOLCHAIN>-<MODULE>     -- install TOOLCHAIN MODULE under
+                                      $$(PREFIX)/$$(TOOLCHAIN) final directory
+  clean-<TOOLCHAIN>-<MODULE>       -- remove TOOLCHAIN MODULE generated objects
+                                      from $$(BUILDDIR)/$$(TOOLCHAIN) build area
 
+::Crosstoll module targets:: Applicable to specified TOOLCHAIN / crosstool
+                             combination
+  menuconfig-<TOOLCHAIN>-crosstool -- configure build of TOOLCHAIN crosstool
+                                      module interactively
+  download-<TOOLCHAIN>-crosstool   -- download software components required to
+                                      build TOOLCHAIN crosstool module.
 
 ::Where::
-  TOOLCHAIN                    -- name of toolchain as listed by the list target
-  MODULE                       -- name of module listed by the list target
-  BUILDDIR                     -- pathname to base directory where intermediate
-                                  objects are generated
-                                  [$(BUILDDIR)]
-  PREFIX                       -- pathname to base directory under which
-                                  toolchain objects will be installed / deployed
-                                  [$(PREFIX)]
+  TOOLCHAIN                        -- name of toolchain as listed by the list
+                                      target
+  MODULE                           -- name of module listed by the list target
+  BUILDDIR                         -- pathname to base directory where
+                                      intermediate objects are generated
+                                      [$(BUILDDIR)]
+  PREFIX                           -- pathname to base directory under which
+                                      toolchain objects will be installed /
+                                      deployed
+                                      [$(PREFIX)]
 
-Further infos may be found into the README.rst file located at the root of
-icchain source tree.
+Further infos may be found into the doc/README.rst file located at the root of
+xtchain source tree.
 
 endef
 
