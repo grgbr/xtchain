@@ -128,7 +128,7 @@ htmlhelp_basename = 'XtChaindoc'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
-    # 'papersize': 'letterpaper',
+    'papersize': 'a4paper',
 
     # The font size ('10pt', '11pt' or '12pt').
     #
@@ -147,8 +147,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'XtChain.tex', u'XtChain Documentation',
-     u'Grégor Boirie', 'manual'),
+    (master_doc, 'xtchain.tex', u'XtChain Documentation',
+     u'Grégor Boirie', 'howto'),
 ]
 
 
