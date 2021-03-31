@@ -12,8 +12,10 @@ CT_ARCH_CPU="cortex-a9"
 CT_ARCH_SUFFIX="v7_a38x"
 CT_ARCH_FPU="neon-vfpv3"
 CT_ARCH_FLOAT_HW=y
+CT_TARGET_CFLAGS="-O2 -D_FORTIFY_SOURCE=2 -fstack-protector-strong"
+CT_TARGET_LDFLAGS="-O2 -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,combreloc"
 # CT_SHOW_CT_VERSION is not set
-CT_TOOLCHAIN_PKGVERSION="xtchain"
+CT_TOOLCHAIN_PKGVERSION="xtchain-1.0"
 CT_TARGET_VENDOR="xtchain"
 CT_TOOLCHAIN_ENABLE_NLS=y
 CT_KERNEL_LINUX=y
@@ -27,10 +29,12 @@ CT_BINUTILS_RELRO=y
 CT_BINUTILS_FOR_TARGET=y
 CT_LIBC_GLIBC=y
 CT_GLIBC_USE_LIBIDN_ADDON=y
-CT_GLIBC_EXTRA_CONFIG_ARRAY="--disable-build-nscd --disable-nscd --enable-bind-now --enable-stackguard-randomization --enable-static-pie"
+CT_GLIBC_EXTRA_CONFIG_ARRAY="--disable-multi-arch --disable-build-nscd --disable-nscd --enable-bind-now --enable-stackguard-randomization --enable-static-pie"
 # CT_GLIBC_ENABLE_OBSOLETE_RPC is not set
 CT_GLIBC_ENABLE_FORTIFIED_BUILD=y
 CT_GLIBC_SSP_STRONG=y
+CT_CC_GCC_CORE_EXTRA_CONFIG_ARRAY="--with-mode=arm --disable-multilib --disable-multiarch --enable-default-pie --enable-default-ssp"
+CT_CC_GCC_EXTRA_CONFIG_ARRAY="--with-mode=arm --disable-multilib --disable-multiarch --enable-default-pie --enable-default-ssp"
 # CT_CC_GCC_STATIC_LIBSTDCXX is not set
 # CT_CC_GCC_ENABLE_TARGET_OPTSPACE is not set
 CT_CC_GCC_LIBMUDFLAP=y
