@@ -154,6 +154,7 @@ $(crosstool_targets):
 # - assuming "yes" answer to all prompts.
 .PHONY: prepare
 prepare:
+	apt-get update --assume-yes
 	apt-get install --no-upgrade --assume-yes $(packages)
 
 .PHONY: $(foreach f,$(flavours),clean-$(f))
