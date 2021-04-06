@@ -12,7 +12,7 @@ CT_ARCH_CPU="cortex-a9"
 CT_ARCH_SUFFIX="v7_a38x"
 CT_ARCH_FPU="neon-vfpv3"
 CT_ARCH_FLOAT_HW=y
-CT_TARGET_CFLAGS="-O2 -D_FORTIFY_SOURCE=2 -fstack-protector-strong"
+CT_TARGET_CFLAGS="-O2 -D_FORTIFY_SOURCE=2"
 CT_TARGET_LDFLAGS="-O2 -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,combreloc"
 # CT_SHOW_CT_VERSION is not set
 CT_TOOLCHAIN_PKGVERSION="xtchain-1.0"
@@ -22,19 +22,21 @@ CT_KERNEL_LINUX=y
 CT_LINUX_SRC_CUSTOM=y
 CT_LINUX_CUSTOM_LOCATION="${TARBALLDIR}/linux-5.10.23.tar.xz"
 CT_BINUTILS_LINKER_LD_GOLD=y
+CT_BINUTILS_LINKERS_LIST="ld,gold"
 CT_BINUTILS_GOLD_THREADS=y
 CT_BINUTILS_LD_WRAPPER=y
 CT_BINUTILS_PLUGINS=y
 CT_BINUTILS_RELRO=y
 CT_BINUTILS_FOR_TARGET=y
+CT_BINUTILS_EXTRA_CONFIG_ARRAY="--enable-relro --enable-libssp --enable-lto --enable-gold --disable-multilib"
 CT_LIBC_GLIBC=y
 CT_GLIBC_USE_LIBIDN_ADDON=y
-CT_GLIBC_EXTRA_CONFIG_ARRAY="--disable-multi-arch --disable-build-nscd --disable-nscd --enable-bind-now --enable-stackguard-randomization --enable-static-pie"
+CT_GLIBC_EXTRA_CONFIG_ARRAY="--disable-multi-arch --disable-build-nscd --disable-nscd --enable-bind-now --enable-stackguard-randomization --enable-static-pie --enable-stack-protector=strong"
 # CT_GLIBC_ENABLE_OBSOLETE_RPC is not set
 CT_GLIBC_ENABLE_FORTIFIED_BUILD=y
 CT_GLIBC_SSP_STRONG=y
-CT_CC_GCC_CORE_EXTRA_CONFIG_ARRAY="--with-mode=arm --disable-multilib --disable-multiarch --enable-default-pie --enable-default-ssp"
-CT_CC_GCC_EXTRA_CONFIG_ARRAY="--with-mode=arm --disable-multilib --disable-multiarch --enable-default-pie --enable-default-ssp"
+CT_CC_GCC_CORE_EXTRA_CONFIG_ARRAY="--with-mode=arm --disable-multilib --disable-multiarch --enable-default-pie --enable-libssp --enable-default-ssp --enable-lto --enable-gold"
+CT_CC_GCC_EXTRA_CONFIG_ARRAY="--with-mode=arm --disable-multilib --disable-multiarch --enable-default-pie --enable-libssp --enable-default-ssp --enable-lto --enable-gold"
 # CT_CC_GCC_STATIC_LIBSTDCXX is not set
 # CT_CC_GCC_ENABLE_TARGET_OPTSPACE is not set
 CT_CC_GCC_LIBMUDFLAP=y
