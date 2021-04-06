@@ -30,7 +30,7 @@ $(stampdir)/installed: $(stampdir)/built
 	rsync --archive \
 	      --no-owner \
 	      $(installdir)/ \
-	      $(prefix)
+	      $(DESTDIR)$(prefix)
 	@touch $(@)
 
 .PHONY: build
@@ -42,7 +42,9 @@ $(stampdir)/built: $(stampdir)/configured | $(tarballdir)
 		unset LD_LIBRARY_PATH && \
 		env TARBALLDIR="$(tarballdir)" \
 		    INSTALLDIR="$(installdir)" \
-		    ./ct-ng build
+		    DESTDIR:= \
+		    VERSION:="$(VERSION)" \
+		    ./ct-ng build DESTDIR:=
 	@touch $(@)
 
 .PHONY: config
@@ -55,7 +57,9 @@ $(stampdir)/configured: $(stampdir)/prepared
 		env DEFCONFIG=$(defconfig) \
 		    TARBALLDIR="$(tarballdir)" \
 		    INSTALLDIR="$(installdir)" \
-		    ./ct-ng defconfig
+		    DESTDIR:= \
+		    VERSION:="$(VERSION)" \
+		    ./ct-ng defconfig DESTDIR:=
 	@touch $(@)
 
 .PHONY: menuconfig
@@ -65,7 +69,9 @@ menuconfig: $(stampdir)/configured
 		env DEFCONFIG=$(defconfig) \
 		    TARBALLDIR="$(tarballdir)" \
 		    INSTALLDIR="$(installdir)" \
-		    ./ct-ng menuconfig
+		    DESTDIR:= \
+		    VERSION:="$(VERSION)" \
+		    ./ct-ng menuconfig DESTDIR:=
 	@touch $(<)
 
 .PHONY: download
@@ -75,10 +81,12 @@ download: $(stampdir)/configured
 		env DEFCONFIG=$(defconfig) \
 		    TARBALLDIR="$(tarballdir)" \
 		    INSTALLDIR="$(installdir)" \
-		    ./ct-ng source
+		    DESTDIR:= \
+		    VERSION:="$(VERSION)" \
+		    ./ct-ng source DESTDIR:=
 
 $(stampdir)/prepared: $(stampdir)/extracted
-	cd $(builddir) && ./configure --enable-local && make
+	+cd $(builddir) && env DESTDIR= ./configure --enable-local && make DESTDIR:=
 	@touch $(@)
 
 .PHONY: extract
@@ -95,4 +103,4 @@ $(stampdir) $(tarballdir):
 .PHONY: clean
 clean:
 	@echo ===== Cleaning $(MODULE)
-	rm -rf $(builddir) $(stampdir)
+	rm -rf $(builddir) $(stampdir) $(installdir)

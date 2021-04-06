@@ -17,7 +17,7 @@ install: $(stampdir)/installed
 
 $(stampdir)/installed: $(stampdir)/built
 	@echo ===== Installing $(MODULE)
-	$(MAKE) -C $(builddir) install DESTDIR:=
+	$(MAKE) -C $(builddir) install DESTDIR:="$(DESTDIR)"
 	@touch $(@)
 
 .PHONY: build
@@ -34,7 +34,7 @@ config: $(stampdir)/configured
 $(stampdir)/configured: $(stampdir)/extracted
 	@echo ===== Configuring $(MODULE)
 	cd $(builddir) && ./configure --prefix=$(prefix) \
-	                              --with-pkgversion=xtchain \
+	                              --with-pkgversion=xtchain-$(VERSION) \
 	                              $(AUTOTOOLS_CONFIGURE_ARGS)
 	@touch $(@)
 

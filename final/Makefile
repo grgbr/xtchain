@@ -9,9 +9,9 @@ endif # ($(CONFIG_CROSSTOOL_TUPLE),)
 install: $(stampdir)/installed
 
 $(stampdir)/installed: $(stampdir)/built \
-                       | $(prefix)/$(CONFIG_CROSSTOOL_TUPLE)/bin
+                       | $(DESTDIR)$(prefix)/$(CONFIG_CROSSTOOL_TUPLE)/bin
 	@echo ===== Installing $(MODULE)
-	ln -sf /bin/true $(prefix)/$(CONFIG_CROSSTOOL_TUPLE)/bin/$(CONFIG_CROSSTOOL_TUPLE)-mt
+	ln -sf /bin/true $(DESTDIR)$(prefix)/$(CONFIG_CROSSTOOL_TUPLE)/bin/$(CONFIG_CROSSTOOL_TUPLE)-mt
 	@touch $(@)
 
 .PHONY: build

@@ -16,7 +16,7 @@ $(stampdir)/installed: $(stampdir)/built
 	@echo ===== Installing $(MODULE)
 	install -m755 -D \
 	        $(builddir)/ldconfig \
-	        $(prefix)/$(CONFIG_CROSSTOOL_TUPLE)/bin/$(CONFIG_CROSSTOOL_TUPLE)-ldconfig
+	        $(DESTDIR)$(prefix)/$(CONFIG_CROSSTOOL_TUPLE)/bin/$(CONFIG_CROSSTOOL_TUPLE)-ldconfig
 	@touch $(@)
 
 .PHONY: build

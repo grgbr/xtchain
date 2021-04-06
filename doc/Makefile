@@ -2,23 +2,21 @@ MODULE := doc
 include $(TOPDIR)/utils.mk
 
 SPHINXBUILD := sphinx-build
-SPHINXOPTS  := -a -j 1
+SPHINXOPTS  := -a -j 1 -D version="$(VERSION)" -D release="$(VERSION)"
 
-install_docdir := $(prefix)/$(CONFIG_CROSSTOOL_TUPLE)/share/doc/xtchain/html
+install_docdir := $(DESTDIR)$(prefix)/share/doc/xtchain
 
 .PHONY: install
 install: $(stampdir)/installed
 
-$(stampdir)/installed: $(stampdir)/built | $(install_docdir)
+$(stampdir)/installed: $(stampdir)/built | $(install_docdir)/html
 	@echo ===== Installing $(MODULE)
-	rsync -rlpt $(builddir)/html/ $(install_docdir)
+	rsync -rlpt $(builddir)/html/ $(install_docdir)/html
 	install -m644 \
 	        $(builddir)/latex/xtchain.pdf \
 	        $(install_docdir)/xtchain.pdf
 	@touch $(@)
 
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 .PHONY: build
 build: $(stampdir)/built
 
@@ -29,7 +27,7 @@ $(stampdir)/built: | $(stampdir) $(builddir)
 	+@$(SPHINXBUILD) -M latexpdf "$(CURDIR)" "$(builddir)" $(SPHINXOPTS)
 	@touch $(@)
 
-$(stampdir) $(builddir) $(install_docdir):
+$(stampdir) $(builddir) $(install_docdir)/html:
 	@mkdir -p $(@)
 
 .PHONY: clean

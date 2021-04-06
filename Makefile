@@ -1,17 +1,29 @@
 unexport AS AR NM LD STRIP CXX OBJCOPY RANLIB CC OBJDUMP CFLAGS LDFLAGS DESTDIR
 
-TOPDIR           := $(CURDIR)
-CONFIGDIR        := $(TOPDIR)/config
-BUILDDIR         := $(HOME)/build/xtchain
-PREFIX           := $(HOME)/dev/tools/xtchain
+TOPDIR             := $(CURDIR)
+CONFIGDIR          := $(TOPDIR)/config
+SCRIPTDIR          := $(TOPDIR)/scripts
+BUILDDIR           := $(TOPDIR)/out
+PREFIX             := /opt/xtchain
+VERSION            := $(shell $(SCRIPTDIR)/localversion.sh \
+                              "$(TOPDIR)" 2>/dev/null)
+ifeq ($(VERSION),)
+$(error Unable to derive xtchain package version)
+endif
 
-CONFIGDIR        := $(abspath $(CONFIGDIR))
-BUILDDIR         := $(abspath $(BUILDDIR))
-override DESTDIR :=
+# Do not use make's abspath function since it does not properly expand glob
+# patterns in all situations (especially for command line overridden variables).
+override CONFIGDIR := $(shell readlink --canonicalize-missing $(CONFIGDIR))
+override SCRIPTDIR := $(shell readlink --canonicalize-missing $(SCRIPTDIR))
+override BUILDDIR  := $(shell readlink --canonicalize-missing $(BUILDDIR))
+override PREFIX    := $(shell readlink --canonicalize-missing $(PREFIX))
+ifneq ($(DESTDIR),)
+override DESTDIR   := $(shell readlink --canonicalize-missing $(DESTDIR))
+endif
 
-flavours         := $(shell find $(CONFIGDIR) \
-                                 -name "*.mk" \
-                                 -exec basename {} .mk \;)
+flavours           := $(shell find $(CONFIGDIR) \
+                                   -name "*.mk" \
+                                   -exec basename {} .mk \;)
 ifeq ($(flavours),)
 $(error Missing configuration files.)
 endif
@@ -55,9 +67,12 @@ packages := coreutils \
             gawk \
             rsync \
             python3-sphinx \
-            python3-sphinx-rtd-theme
+            python3-sphinx-rtd-theme \
+            unzip
 
+ifeq ($(V),)
 .SILENT:
+endif
 .NOTPARALLEL:
 
 ################################################################################
@@ -89,7 +104,6 @@ $(eval $(foreach f,$(flavours),$(call gen_top_targets,extract,$(f))$(newline)))
 $(eval $(foreach f,$(flavours),$(call gen_top_targets,config,$(f))$(newline)))
 $(eval $(foreach f,$(flavours),$(call gen_top_targets,build,$(f))$(newline)))
 $(eval $(foreach f,$(flavours),$(call gen_top_targets,install,$(f))$(newline)))
-$(eval $(foreach f,$(flavours),$(call gen_top_targets,clean,$(f))$(newline)))
 
 .PHONY: $(all_targets)
 $(all_targets):
@@ -97,9 +111,12 @@ $(all_targets):
 	        $(call target_action,$(@)) \
 	        TOPDIR:=$(TOPDIR) \
 	        CONFIGDIR:=$(CONFIGDIR) \
+	        SCRIPTDIR:=$(SCRIPTDIR) \
 	        FLAVOUR:=$(call target_flavour,$(@)) \
 	        BUILDDIR:=$(BUILDDIR) \
-	        PREFIX:=$(PREFIX)
+	        PREFIX:=$(PREFIX) \
+	        VERSION:=$(VERSION) \
+	        DESTDIR:=$(DESTDIR)
 
 ################################################################################
 # Crosstool module specific targets
@@ -121,9 +138,12 @@ $(crosstool_targets):
 	        $(call target_action,$(@)) \
 	        TOPDIR:=$(TOPDIR) \
 	        CONFIGDIR:=$(CONFIGDIR) \
+	        SCRIPTDIR:=$(SCRIPTDIR) \
 	        FLAVOUR:=$(call target_flavour,$(@)) \
 	        BUILDDIR:=$(BUILDDIR) \
-	        PREFIX:=$(PREFIX)
+	        PREFIX:=$(PREFIX) \
+	        VERSION:=$(VERSION) \
+	        DESTDIR:=$(DESTDIR)
 
 ################################################################################
 # Main targets
@@ -135,6 +155,10 @@ $(crosstool_targets):
 .PHONY: prepare
 prepare:
 	apt-get install --no-upgrade --assume-yes $(packages)
+
+.PHONY: $(foreach f,$(flavours),clean-$(f))
+$(foreach f,$(flavours),clean-$(f)):
+	@rm -rf $(BUILDDIR)/$(subst clean-,$(empty),$(@))
 
 .PHONY: mrproper
 mrproper:
@@ -160,6 +184,13 @@ list:
 	@for m in $(modules); do \
 		printf "  %-16s\n" "$$m"; \
 	 done
+
+showvar-%: FORCE
+	$(if $($(subst showvar-,$(empty),$(@))), \
+	     echo $($(subst showvar-,$(empty),$(@))))
+
+.PHONY: FORCE
+FORCE:
 
 define help_message
 ===== Usage =====
@@ -222,6 +253,6 @@ endef
 
 .PHONY: help
 help:
-	/bin/echo -e '$(subst $(newline),\n,$(help_message))'
+	printf '$(subst $(newline),\n,$(help_message))'
 
 .DEFAULT_GOAL := help
