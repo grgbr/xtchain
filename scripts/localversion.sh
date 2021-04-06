@@ -2,7 +2,7 @@
 
 MAJOR="1"
 MINOR="0"
-VERSION="${MAJOR}.${MINOR}"
+VERSION="${MAJOR}.${MINOR}-rc1"
 
 usage() {
 	echo "Usage: $(basename $0) [srctree]" >&2
@@ -39,9 +39,9 @@ svn_mixed()
 	local rev;
 	local _dummy_;
 
-	svn --non-interactive \
-	    info --recursive --show-item revision "$path" 2>/dev/null | \
-	while read rev _dummy_; do
+	svn --non-interactive info --recursive "$path" 2>/dev/null | \
+	sed --quiet 's;^Revision:[ \t]*;;p' | \
+	while read rev; do
 		if [ "$rev" != "$ref" ]; then
 			echo -n "+"
 			return 0
@@ -76,9 +76,8 @@ svn_version()
 	local mixed
 	local dirty
 
-	if ! relurl=$(svn --non-interactive \
-	                  info --show-item relative-url \
-	                  "$dir" 2>/dev/null); then
+	if ! relurl=$(svn --non-interactive info "$dir" 2>/dev/null | \
+	              sed --quiet 's;^Relative URL:[ \t]*;;p'); then
 		return 1
 	fi
 	if ! svn_is_top "$relurl"; then
@@ -86,8 +85,8 @@ svn_version()
 	fi
 
 	tag=$(svn_tag "$relurl")
-	rev=$(svn --non-interactive \
-	          info --show-item revision "$dir" 2>/dev/null)
+	rev=$(svn --non-interactive info "$dir" 2>/dev/null | \
+	      sed --quiet 's;^Revision:[ \t]*;;p')
 
 	if [ "$tag" != "$VERSION" ]; then
 		name="${name}~s${rev}"
