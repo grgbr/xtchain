@@ -98,7 +98,7 @@ your development host :
 * flex
 * bison
 * texinfo
-* texlive
+* texlive / texlive-formats-extra
 * gawk
 * rsync
 * python3-sphinx / python3-sphinx-rtd-theme

@@ -64,6 +64,7 @@ packages := coreutils \
             bison \
             texinfo \
             texlive \
+            texlive-formats-extra \
             gawk \
             rsync \
             python3-sphinx \
