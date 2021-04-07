@@ -65,6 +65,7 @@ packages := coreutils \
             texinfo \
             texlive \
             texlive-formats-extra \
+            latexmk \
             gawk \
             rsync \
             python3-sphinx \
