@@ -103,6 +103,7 @@ your development host :
 * rsync
 * python3-sphinx / python3-sphinx-rtd-theme
 * unzip
+* fakeroot
 
 Main Makefile comes with a *prepare* target allowing to install all required
 packages (see `Build`_ section).

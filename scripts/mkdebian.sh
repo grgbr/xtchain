@@ -109,4 +109,4 @@ Maintainer: ComEth maintainer <cometh@ic.fr>
 Description: $flavour cross compiling toolchain
 _EOF
 
-exec dpkg-deb --root-owner-group --build "$debian_path" "$builddir"
+exec fakeroot dpkg-deb --build "$debian_path" "$builddir"

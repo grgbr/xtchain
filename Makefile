@@ -70,7 +70,8 @@ packages := coreutils \
             rsync \
             python3-sphinx \
             python3-sphinx-rtd-theme \
-            unzip
+            unzip \
+            fakeroot
 
 ifeq ($(V),)
 .SILENT:
