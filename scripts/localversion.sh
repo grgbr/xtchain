@@ -155,14 +155,14 @@ git_version()
 scm_version()
 {
 	if git_version; then
-		return 0
+		return
 	fi
 
 	if svn_version "."; then
-		return 0
+		return
 	fi
 
-	return 1
+	echo -n "$VERSION"
 }
 
 srctree=.
