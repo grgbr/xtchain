@@ -165,8 +165,6 @@ scm_version()
 	return 1
 }
 
-#export LC_ALL=
-
 srctree=.
 if test $# -gt 0; then
 	srctree=$1
