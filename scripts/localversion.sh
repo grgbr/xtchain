@@ -21,7 +21,8 @@ svn_dirty()
 	local path="$1"
 	local stat
 
-	if ! stat=$(svn --non-interactive status "$path"); then
+	if ! stat=$(env LANG= LC_ALL= LC_MESSAGES=C \
+	            svn --non-interactive status "$path"); then
 		return 1
 	fi
 
@@ -39,6 +40,7 @@ svn_mixed()
 	local rev;
 	local _dummy_;
 
+	env LANG= LC_ALL= LC_MESSAGES=C \
 	svn --non-interactive info --recursive "$path" 2>/dev/null | \
 	sed --quiet 's;^Revision:[ \t]*;;p' | \
 	while read rev; do
@@ -76,7 +78,8 @@ svn_version()
 	local mixed
 	local dirty
 
-	if ! relurl=$(svn --non-interactive info "$dir" 2>/dev/null | \
+	if ! relurl=$(env LANG= LC_ALL= LC_MESSAGES=C \
+	              svn --non-interactive info "$dir" 2>/dev/null | \
 	              sed --quiet 's;^Relative URL:[ \t]*;;p'); then
 		return 1
 	fi
@@ -85,7 +88,8 @@ svn_version()
 	fi
 
 	tag=$(svn_tag "$relurl")
-	rev=$(svn --non-interactive info "$dir" 2>/dev/null | \
+	rev=$(env LANG= LC_ALL= LC_MESSAGES=C \
+	      svn --non-interactive info "$dir" 2>/dev/null | \
 	      sed --quiet 's;^Revision:[ \t]*;;p')
 
 	if [ "$tag" != "$VERSION" ]; then
@@ -160,6 +164,8 @@ scm_version()
 
 	return 1
 }
+
+#export LC_ALL=
 
 srctree=.
 if test $# -gt 0; then
