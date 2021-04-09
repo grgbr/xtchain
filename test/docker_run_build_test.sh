@@ -96,6 +96,11 @@ image="$2"
 
 top_dir=$(realpath --canonicalize-existing $(dirname $0)/..)
 
+docker_cmd="docker run --rm"
+if tty --silent; then
+	docker_cmd="$docker_cmd --tty --interactive"
+fi
+
 if [ "$scm" = "git" ]; then
 	repo=$(echo "$url" | sed -n 's/#.*$//;p')
 	branch=$(echo "$url" | sed -n 's/^[^#]\+[#]*//p')
@@ -105,28 +110,22 @@ if [ "$scm" = "git" ]; then
 		                 --exit-code \
 		                 "$repo" \
 		                 "$branch" >/dev/null 2>&1; then
-			exec docker run --tty \
-			                --interactive \
-			                --rm \
-			                --volume $top_dir/test:/tmp/test \
-			                "$image" \
-			                /tmp/test/docker_test_git_build.sh \
-			                "$toolchain" \
-			                "$repo" \
-			                "$branch"
+			exec $docker_cmd --volume $top_dir/test:/tmp/test \
+			                 "$image" \
+			                 /tmp/test/docker_test_git_build.sh \
+			                 "$toolchain" \
+			                 "$repo" \
+			                 "$branch"
 		fi
 	else
 		if git ls-remote --quiet \
 		                 --exit-code \
 		                 "$repo" >/dev/null 2>&1; then
-			exec docker run --tty \
-			                --interactive \
-			                --rm \
-			                --volume $top_dir/test:/tmp/test \
-			                "$image" \
-			                /tmp/test/docker_test_git_build.sh \
-			                "$toolchain" \
-			                "$repo"
+			exec $docker_cmd --volume $top_dir/test:/tmp/test \
+			                 "$image" \
+			                 /tmp/test/docker_test_git_build.sh \
+			                 "$toolchain" \
+			                 "$repo"
 		fi
 	fi
 
@@ -138,12 +137,9 @@ elif [ "$scm" = "svn" ]; then
 		exit 1
 	fi
 
-	exec docker run --tty \
-	                --interactive \
-	                --rm \
-	                --volume $top_dir/test:/tmp/test \
-	                "$image" \
-	                /tmp/test/docker_test_svn_build.sh "$toolchain" "$url"
+	exec $docker_cmd --volume $top_dir/test:/tmp/test \
+	                 "$image" \
+	                 /tmp/test/docker_test_svn_build.sh "$toolchain" "$url"
 else
 	outdir=$(show_make_var "BUILDDIR")/$toolchain
 
@@ -156,13 +152,10 @@ else
 	    -cvzf $outdir/xtchain.tar.gz \
 	    .
 
-	exec docker run --tty \
-	                --interactive \
-	                --rm \
-	                --volume $top_dir/test:/tmp/test \
-	                --volume $outdir:/tmp/src \
-	                "$image" \
-	                /tmp/test/docker_test_tar_build.sh \
-	                "$toolchain" \
-	                "/tmp/src/xtchain.tar.gz"
+	exec $docker_cmd --volume $top_dir/test:/tmp/test \
+	                 --volume $outdir:/tmp/src \
+	                 "$image" \
+	                 /tmp/test/docker_test_tar_build.sh \
+	                 "$toolchain" \
+	                 "/tmp/src/xtchain.tar.gz"
 fi
