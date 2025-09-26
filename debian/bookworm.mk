@@ -21,6 +21,8 @@ DEBSRCDEPS := lsb-release \
               rustc \
               latexmk texlive-latex-extra texlive-font-utils texlive-extra-utils \
               desktop-file-utils \
+              automake \
+              libtool \
               dejagnu \
               bison \
               flex \
@@ -38,7 +40,7 @@ DEBSRCDEPS := lsb-release \
               libmicrohttpd-dev \
               libmsgpack-dev \
               libxxhash-dev \
-              librealine-dev \
+              libreadline-dev \
               libncurses-dev \
               libpython3-dev \
               libsource-highlight-dev \
