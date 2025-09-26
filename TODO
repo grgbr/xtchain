@@ -1,0 +1,7 @@
+gcc:
+include -fasynchronous-unwind-tables by default (in spec ?)
+
+glibc:
+remove target libunwind dep
+
+full target gdb support ? (requires target readline and ncurses)

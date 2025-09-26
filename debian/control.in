@@ -1,0 +1,12 @@
+Source: xtchain-@@DEBPKGNAME@@
+Package: xtchain-@@DEBPKGNAME@@
+Version: @@DEBVERS@@
+Distribution: @@DEBDIST@@
+Origin: @@DEBORIG@@
+Architecture: @@DEBARCH@@
+Section: devel
+Priority: optional
+Maintainer: XtChain maintainer <@@DEBMAIL@@>
+Depends: @@DEBBINDEPS@@
+Description: cross toolchain
+ Build cross toolchain base on gcc-@@DEBVERSMAJOR@@
