@@ -313,13 +313,13 @@ $(OUTDIR)/$(DEBDIST)/stamp/docker-ready: $(TOPDIR)/Dockerfile \
 	docker build \
 	       --file '$(<)' \
 	       --tag 'xtchain:$(DEBDIST)' \
-	           --build-arg DOCKIMG="$(DOCKIMG)" \
-	           --build-arg DEBSRCDEPS="$(DEBSRCDEPS)" \
-	           --build-arg XTCHAIN_UID="$(shell id -u)" \
-	           --build-arg XTCHAIN_USER="$(shell id -un)" \
-	           --build-arg XTCHAIN_GID="$(shell id -g)" \
-	           --build-arg XTCHAIN_GROUP="$(shell id -gn)" \
-	           --build-arg XTCHAIN_HOME="$(HOME)" \
+	       --build-arg DOCKIMG="$(DOCKIMG)" \
+	       --build-arg DEBSRCDEPS="$(DEBSRCDEPS)" \
+	       --build-arg XTCHAIN_UID="$(shell id -u)" \
+	       --build-arg XTCHAIN_USER="$(shell id -un)" \
+	       --build-arg XTCHAIN_GID="$(shell id -g)" \
+	       --build-arg XTCHAIN_GROUP="$(shell id -gn)" \
+	       --build-arg XTCHAIN_HOME="$(HOME)" \
 	       $(TOPDIR)
 	$(call touch,$(@))
 

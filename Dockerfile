@@ -13,7 +13,7 @@ USER root
 # Install basic tools
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get --yes update
-# Somme docker minimize env by removing doc and doc tools. Force unminimize it
+# Some docker minimize env by removing doc and doc tools. Force unminimize it
 # for test inside docker (like perl)
 RUN if [ -f /usr/local/sbin/unminimize ]; then yes | /usr/local/sbin/unminimize; fi
 RUN apt-get --yes install sudo util-linux make locales $DEBSRCDEPS
@@ -28,12 +28,12 @@ RUN umask 0337 && \
 
 RUN addgroup --gid $XTCHAIN_GID $XTCHAIN_GROUP >/dev/null
 RUN adduser --uid $XTCHAIN_UID \
-        --gid $XTCHAIN_GID \
-        --home $XTCHAIN_HOME \
-        --no-create-home \
-        --disabled-password \
-        --gecos '' \
-        $XTCHAIN_USER >/dev/null
+            --gid $XTCHAIN_GID \
+            --home $XTCHAIN_HOME \
+            --no-create-home \
+            --disabled-password \
+            --gecos '' \
+            $XTCHAIN_USER >/dev/null
 RUN adduser $XTCHAIN_USER xtchain >/dev/null
 RUN adduser $XTCHAIN_USER sudo >/dev/null
 

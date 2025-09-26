@@ -1,5 +1,5 @@
-Source: xtchain-@@DEBPKGNAME@@
-Package: xtchain-@@DEBPKGNAME@@
+Source: @@DEBPKGNAME@@
+Package: @@DEBPKGNAME@@
 Version: @@DEBVERS@@
 Distribution: @@DEBDIST@@
 Origin: @@DEBORIG@@
